@@ -100,7 +100,10 @@ movies2review <- select(movies, id)
 
 reviews <- reviews.raw %>%
   inner_join(movies2review, by='id') %>%
-  select(-originalScore)
+  select(-originalScore) %>%
+  group_by(id) %>%
+  slice(1:5) %>%  # each movie leave up to 5 records
+  ungroup()
 
 ## get critic table
 is_top_critic <- reviews %>%
@@ -122,8 +125,9 @@ critic <- reviews %>%
 ## get review table
 review <- reviews %>%
   inner_join(critic, by=c('criticName'='name')) %>%
-  select(reviewId, id, creationDate, critic_id, reviewState, reviewText) %>%
-  rename(movie_id = id)
+  select(reviewId, id, creationDate, critic_id, reviewState, reviewText, reviewUrl) %>%
+  rename(movie_id = id) %>%
+  distinct()
 
 
 ## ------------------------------ Write tables ------------------------------ ##
@@ -135,3 +139,13 @@ write_csv(movie_genre, 'data/table_movie_genre.csv')
 
 write_csv(critic, 'data/table_critic.csv')
 write_csv(review, 'data/table_review.csv')
+
+
+## check the output tables
+director <- read_csv('data/table_director.csv')
+distributer <- read_csv('data/table_distributer.csv')
+movie <- read_csv('data/table_movie.csv')
+genre <- read_csv('data/table_genre.csv')
+movie_genre <- read_csv('data/table_movie_genre.csv')
+critic <- read_csv('data/table_critic.csv')
+review <- read_csv('data/table_review.csv')
