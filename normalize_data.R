@@ -106,7 +106,8 @@ reviews <- reviews.raw %>%
   select(-originalScore) %>%
   group_by(id) %>%
   slice(1:5) %>%  # each movie leave up to 5 records
-  ungroup()
+  ungroup() %>%
+  mutate(is_fresh = ifelse(reviewState == 'fresh', TRUE, FALSE))
 
 ## get critic table
 is_top_critic <- reviews %>%
@@ -128,7 +129,7 @@ critic <- reviews %>%
 ## get review table
 review <- reviews %>%
   inner_join(critic, by=c('criticName'='name')) %>%
-  select(reviewId, id, creationDate, critic_id, reviewState, reviewText, reviewUrl) %>%
+  select(reviewId, id, creationDate, critic_id, is_fresh, reviewText, reviewUrl) %>%
   rename(movie_id = id) %>%
   distinct()
 
