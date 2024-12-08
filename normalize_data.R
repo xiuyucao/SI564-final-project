@@ -74,7 +74,10 @@ movie <- movies %>%
 
 
 ## get genre table
+movie2keep <- select(movie, id)
+
 movie_genrename <- movies %>%
+  inner_join(movie2keep, by='id') %>%
   select(id, genre) %>%
   separate_rows(genre, sep=', ') %>%  # separate by comma and blank space
   rename(movie_id=id) %>%
@@ -96,7 +99,7 @@ movie_genre <- movie_genrename %>%
   
   
 ## -------------------- Clean and Normalize Reviews Data -------------------- ##
-movies2review <- select(movies, id)
+movies2review <- select(movie, id)
 
 reviews <- reviews.raw %>%
   inner_join(movies2review, by='id') %>%
