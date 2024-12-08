@@ -49,13 +49,13 @@ director <- movies %>%
   rename(name = director)
 
 
-## get distributer table
-distributer <- movies %>%
+## get distributor table
+distributor <- movies %>%
   select(distributor) %>%
   distinct() %>%
   na.omit() %>%
-  mutate(distributer_id = row_number()) %>%
-  select(distributer_id, distributor) %>%
+  mutate(distributor_id = row_number()) %>%
+  select(distributor_id, distributor) %>%
   rename(name = distributor)
 
 
@@ -66,10 +66,10 @@ movie <- movies %>%
          runtimeMinutes, originalLanguage, director, distributor, 
          boxOffice, audienceScore, tomatoMeter) %>%
   inner_join(director, by=c('director'='name')) %>%
-  inner_join(distributer, by=c('distributor'='name')) %>%
+  inner_join(distributor, by=c('distributor'='name')) %>%
   select(id, title, rating, ratingContents,
          releaseDateTheaters, releaseDateStreaming,
-         runtimeMinutes, originalLanguage, director_id, distributer_id,
+         runtimeMinutes, originalLanguage, director_id, distributor_id,
          boxOffice, audienceScore, tomatoMeter)
 
 
@@ -135,7 +135,7 @@ review <- reviews %>%
 
 ## ------------------------------ Write tables ------------------------------ ##
 write_csv(director, 'data/table_director.csv')
-write_csv(distributer, 'data/table_distributer.csv')
+write_csv(distributor, 'data/table_distributor.csv')
 write_csv(movie, 'data/table_movie.csv')
 write_csv(genre, 'data/table_genre.csv')
 write_csv(movie_genre, 'data/table_movie_genre.csv')
@@ -146,7 +146,7 @@ write_csv(review, 'data/table_review.csv')
 
 ## check the output tables
 director <- read_csv('data/table_director.csv')
-distributer <- read_csv('data/table_distributer.csv')
+distributor <- read_csv('data/table_distributor.csv')
 movie <- read_csv('data/table_movie.csv')
 genre <- read_csv('data/table_genre.csv')
 movie_genre <- read_csv('data/table_movie_genre.csv')
